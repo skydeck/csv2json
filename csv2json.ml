@@ -25,7 +25,6 @@ let main () =
   try
     let head = Csv.next stream in
     while true do
-      flush stdout;
       try
         let pairs =
           let x = Csv.next stream in
@@ -47,7 +46,13 @@ let main () =
 
   with End_of_file ->
     flush oc;
-    if !errors <> 0 then
-      eprintf "%i errors\n%!" !errors
+    if !errors <> 0 then (
+      eprintf "%i errors\n%!" !errors;
+      false
+    )
+    else
+      true
 
-let () = main ()
+let () =
+  if main () then exit 0
+  else exit 1
